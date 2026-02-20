@@ -17,11 +17,16 @@
 
         .iphone-frame-slim {
             position: relative;
-            border-radius: 2.5rem;
+            border-radius: 1.2rem;
             overflow: hidden;
             background: #fff;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             transition: all 0.5s ease;
+        }
+        @media (min-width: 768px) {
+            .iphone-frame-slim {
+                border-radius: 2.5rem;
+            }
         }
 
         /* AI STYLE FEATURE CARDS */
@@ -242,34 +247,7 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Sidebar: dark card - Integração por Voz -->
-            <div class="granger-card bg-[#0f172a] rounded-[2rem] p-8 text-white flex flex-col justify-between relative overflow-hidden min-h-[340px]">
-                <div>
-                    <div class="flex items-center justify-between mb-6">
-                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Integração</span>
-                        <span class="px-2.5 py-1 bg-white/10 text-[9px] font-bold rounded-full text-blue-300 uppercase">Voz</span>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-4 leading-tight">Controle<br>por Voz</h3>
-                    <p class="text-sm text-slate-400 leading-relaxed">
-                        "Alexa, avisa o SubCheff que o leite acabou." Gerencie sua despensa sem tocar no celular.
-                    </p>
-                </div>
-                <div>
-                    <img src="./assets/alexa3.png" alt="Alexa" class="w-full h-32 object-cover rounded-2xl mb-4 opacity-80">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-2">
-                            <div class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
-                            <span class="text-[10px] font-bold text-slate-500 uppercase">Alexa & Google Home</span>
-                        </div>
-                        <div class="flex -space-x-2">
-                            <img src="https://ui-avatars.com/api/?name=V&background=3b82f6&color=fff&size=32" class="w-6 h-6 rounded-full border-2 border-[#0f172a]" alt="">
-                            <img src="https://ui-avatars.com/api/?name=M&background=8b5cf6&color=fff&size=32" class="w-6 h-6 rounded-full border-2 border-[#0f172a]" alt="">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div> 
 
         <!-- Row 2: 3 equal cards -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
