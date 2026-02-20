@@ -178,20 +178,43 @@
         </div>
 
         <div class="mock-expand max-w-5xl mx-auto relative px-4 z-10 mt-4">
-            <div class="grid grid-cols-3 gap-4 items-center">
-                <div class="iphone-frame-slim rotate-[-6deg] translate-y-12 opacity-60"><img src="./assets/despensa.png" alt="Despensa"></div>
-                <div class="iphone-frame-slim z-10 scale-110 shadow-2xl border-4 border-slate-900"><img src="./assets/pratododia.png" alt="Principal"></div>
-                <div class="iphone-frame-slim rotate-[6deg] translate-y-12 opacity-60"><img src="./assets/explore.png" alt="Gastos"></div>
+            <!-- 3-visible carousel -->
+            <div class="relative" id="mock-carousel">
+                <div class="grid grid-cols-3 gap-3 md:gap-6 items-center" style="perspective: 800px;">
+                    <div id="mock-left" class="transition-all duration-500 ease-out cursor-pointer" onclick="slideMock(-1)">
+                        <div class="iphone-frame-slim shadow-lg"><img src="" alt=""></div>
+                    </div>
+                    <div id="mock-center" class="transition-all duration-500 ease-out z-10">
+                        <div class="iphone-frame-slim shadow-2xl border-4 border-slate-900"><img src="" alt=""></div>
+                    </div>
+                    <div id="mock-right" class="transition-all duration-500 ease-out cursor-pointer" onclick="slideMock(1)">
+                        <div class="iphone-frame-slim shadow-lg"><img src="" alt=""></div>
+                    </div>
+                </div>
+                <!-- Navigation arrows -->
+                <button onclick="slideMock(-1)" class="absolute top-1/2 -left-2 md:-left-8 -translate-y-1/2 w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition z-20 border border-slate-200">
+                    <i data-lucide="chevron-left" class="w-4 h-4 text-slate-700"></i>
+                </button>
+                <button onclick="slideMock(1)" class="absolute top-1/2 -right-2 md:-right-8 -translate-y-1/2 w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center hover:scale-110 transition z-20 border border-slate-200">
+                    <i data-lucide="chevron-right" class="w-4 h-4 text-slate-700"></i>
+                </button>
+                <!-- Dots -->
+                <div id="mock-dots" class="flex justify-center gap-2 mt-8">
+                    <button onclick="goToMock(0)" class="w-2 h-2 rounded-full bg-slate-900 transition-all"></button>
+                    <button onclick="goToMock(1)" class="w-2 h-2 rounded-full bg-slate-300 transition-all"></button>
+                    <button onclick="goToMock(2)" class="w-2 h-2 rounded-full bg-slate-300 transition-all"></button>
+                    <button onclick="goToMock(3)" class="w-2 h-2 rounded-full bg-slate-300 transition-all"></button>
+                </div>
             </div>
             <!-- Alexa hint - floating right -->
-            <div class="alexa-float absolute -top-8 -right-2 md:right-4 z-20">
+            <!-- <div class="alexa-float absolute -top-8 -right-2 md:right-4 z-20">
                 <div class="relative">
                     <img src="./assets/alexa.png" alt="Alexa" class="w-20 md:w-28 h-20 md:h-28 object-cover rounded-full shadow-2xl shadow-blue-500/30 border-4 border-white">
                     <div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tight shadow-lg flex items-center gap-1.5">
                         <i data-lucide="mic" class="w-3 h-3"></i> Alexa
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         
     </section>
@@ -234,8 +257,8 @@
                                 <i data-lucide="database" class="w-4 h-4"></i>
                             </div>
                             <div class="flex flex-col">
-                                <span class="text-xs font-bold text-slate-900">+100 mil</span>
-                                <span class="text-[9px] text-slate-400 font-medium uppercase tracking-tight">Produtos BR</span>
+                                <span class="text-xs font-bold text-slate-900">+100 mil produtos brasileiros</span>
+                                <span class="text-[9px] text-slate-400 font-medium uppercase tracking-tight">CADASTRADOS</span>
                             </div>
                         </div>
                     </div>
@@ -653,41 +676,34 @@
                 <p class="text-slate-500 max-w-sm text-sm leading-relaxed md:text-right">Nossa IA analisa o que está vencendo e cruza com seus hábitos para sugerir o prato perfeito.</p>
             </div>
 
-            <div class="grid md:grid-cols-3 gap-4">
-                <div class="md:col-span-2 grid md:grid-cols-2 gap-4">
-                    <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[200px]">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="granger-card bg-white rounded-[1.5rem] p-5 flex flex-col justify-between group">
                         <div>
-                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-100 text-blue-700 text-[11px] font-bold rounded-full uppercase mb-4 border border-blue-200"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Prioridade</span>
-                            <h3 class="text-lg font-bold mb-2">Desperdício Zero</h3>
-                            <p class="text-slate-500 text-[13px] leading-relaxed">Prioriza ingredientes perto do vencimento para evitar perdas.</p>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-100 text-blue-700 text-[10px] font-bold rounded-full uppercase mb-3 border border-blue-200"><i data-lucide="alert-triangle" class="w-3 h-3"></i> Prioridade</span>
+                            <h3 class="text-base font-bold mb-1.5">Desperdício Zero</h3>
+                            <p class="text-slate-500 text-[12px] leading-relaxed">Prioriza ingredientes perto do vencimento para evitar perdas.</p>
                         </div>
                     </div>
-                    <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[200px]">
+                    <div class="granger-card bg-white rounded-[1.5rem] p-5 flex flex-col justify-between group">
                         <div>
-                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-100 text-emerald-700 text-[11px] font-bold rounded-full uppercase mb-4 border border-emerald-200"><i data-lucide="package" class="w-3.5 h-3.5"></i> Estoque</span>
-                            <h3 class="text-lg font-bold mb-2">Análise de Inventário</h3>
-                            <p class="text-slate-500 text-[13px] leading-relaxed">Cruza receitas com seu estoque real — avisa o que tem e o que falta.</p>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-100 text-emerald-700 text-[10px] font-bold rounded-full uppercase mb-3 border border-emerald-200"><i data-lucide="package" class="w-3 h-3"></i> Estoque</span>
+                            <h3 class="text-base font-bold mb-1.5">Análise de Inventário</h3>
+                            <p class="text-slate-500 text-[12px] leading-relaxed">Cruza receitas com seu estoque real — avisa o que tem e o que falta.</p>
                         </div>
                     </div>
-                    <div class="granger-card bg-[#0f172a] rounded-[2rem] p-7 text-white flex flex-col justify-between group min-h-[200px]">
+                    <div class="granger-card bg-[#0f172a] rounded-[1.5rem] p-5 text-white flex flex-col justify-between group">
                         <div>
-                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white/10 text-blue-300 text-[11px] font-bold rounded-full uppercase mb-4 border border-white/10"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> IA Ativa</span>
-                            <h3 class="text-lg font-bold mb-2">O que sobrou<br>vira receita.</h3>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-blue-300 text-[10px] font-bold rounded-full uppercase mb-3 border border-white/10"><i data-lucide="sparkles" class="w-3 h-3"></i> IA Ativa</span>
+                            <h3 class="text-base font-bold mb-1.5">O que sobrou<br>vira receita.</h3>
                         </div>
                     </div>
-                    <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[200px]">
+                    <div class="granger-card bg-white rounded-[1.5rem] p-5 flex flex-col justify-between group">
                         <div>
-                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-100 text-amber-700 text-[11px] font-bold rounded-full uppercase mb-4 border border-amber-200"><i data-lucide="scale" class="w-3.5 h-3.5"></i> Smart</span>
-                            <h3 class="text-lg font-bold mb-2">Ajuste de Porções</h3>
-                            <p class="text-slate-500 text-[13px] leading-relaxed">Recalcula quantidades para evitar sobras desnecessárias.</p>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-100 text-amber-700 text-[10px] font-bold rounded-full uppercase mb-3 border border-amber-200"><i data-lucide="scale" class="w-3 h-3"></i> Smart</span>
+                            <h3 class="text-base font-bold mb-1.5">Ajuste de Porções</h3>
+                            <p class="text-slate-500 text-[12px] leading-relaxed">Recalcula quantidades para evitar sobras desnecessárias.</p>
                         </div>
                     </div>
-                </div>
-                <div class="reveal flex justify-center items-center">
-                    <div class="iphone-frame-slim max-w-[260px] md:max-w-[280px] shadow-xl border-[4px] border-slate-100">
-                        <img src="./assets/pratododia.png" alt="Sugestão do Dia" class="w-full h-auto">
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -1099,6 +1115,143 @@
         lucide.createIcons();
         function openModal() { document.getElementById('downloadModal').classList.add('active'); }
         function closeModal() { document.getElementById('downloadModal').classList.remove('active'); }
+
+        // Hero mock carousel - 3 visible with tilt
+        const mockSlides = [
+            { src: './assets/pratododia.png', alt: 'Principal' },
+            { src: './assets/despensa.png', alt: 'Despensa' },
+            { src: './assets/explore.png', alt: 'Explore' },
+            { src: './assets/recepie.png', alt: 'Receita' },
+        ];
+        let mockIndex = 0;
+        const mockTotal = mockSlides.length;
+        const mockLeft = document.getElementById('mock-left');
+        const mockCenter = document.getElementById('mock-center');
+        const mockRight = document.getElementById('mock-right');
+        const mockDots = document.querySelectorAll('#mock-dots button');
+
+        function getMockIndex(offset) {
+            return (mockIndex + offset + mockTotal) % mockTotal;
+        }
+
+        function updateMockCarousel() {
+            const li = getMockIndex(-1), ci = mockIndex, ri = getMockIndex(1);
+            mockLeft.querySelector('img').src = mockSlides[li].src;
+            mockLeft.querySelector('img').alt = mockSlides[li].alt;
+            mockCenter.querySelector('img').src = mockSlides[ci].src;
+            mockCenter.querySelector('img').alt = mockSlides[ci].alt;
+            mockRight.querySelector('img').src = mockSlides[ri].src;
+            mockRight.querySelector('img').alt = mockSlides[ri].alt;
+
+            // Side mocks: tilted, faded, shifted down
+            mockLeft.style.transform = 'rotate(-6deg) translateY(12px) scale(0.92)';
+            mockLeft.style.opacity = '0.5';
+            mockCenter.style.transform = 'scale(1.08)';
+            mockCenter.style.opacity = '1';
+            mockRight.style.transform = 'rotate(6deg) translateY(12px) scale(0.92)';
+            mockRight.style.opacity = '0.5';
+
+            mockDots.forEach((dot, i) => {
+                dot.className = i === mockIndex
+                    ? 'w-2.5 h-2.5 rounded-full bg-slate-900 transition-all'
+                    : 'w-2 h-2 rounded-full bg-slate-300 transition-all';
+            });
+        }
+
+        function slideMock(dir) {
+            mockIndex = (mockIndex + dir + mockTotal) % mockTotal;
+            updateMockCarousel();
+        }
+
+        function goToMock(i) {
+            mockIndex = i;
+            updateMockCarousel();
+        }
+
+        updateMockCarousel();
+
+        // Interactive drag with live feedback
+        (function() {
+            let startX = 0;
+            let isDragging = false;
+            let currentX = 0;
+            const el = document.getElementById('mock-carousel');
+            const threshold = 80;
+
+            function setTransition(on) {
+                const dur = on ? '0.5s' : '0s';
+                mockLeft.style.transitionDuration = dur;
+                mockCenter.style.transitionDuration = dur;
+                mockRight.style.transitionDuration = dur;
+            }
+
+            function applyDragProgress(diff) {
+                // progress: -1 (swiped fully left) to 1 (swiped fully right)
+                const p = Math.max(-1, Math.min(1, diff / threshold));
+
+                // Center mock: moves with drag, shrinks as you pull away
+                const cScale = 1.08 - Math.abs(p) * 0.16;
+                const cRotate = p * -4;
+                const cShift = diff * 0.3;
+                mockCenter.style.transform = `translateX(${cShift}px) scale(${cScale}) rotate(${cRotate}deg)`;
+                mockCenter.style.opacity = `${1 - Math.abs(p) * 0.5}`;
+
+                // Left mock: comes forward when swiping right (p > 0)
+                const lScale = 0.92 + (p > 0 ? p * 0.16 : 0);
+                const lRotate = -6 + (p > 0 ? p * 6 : 0);
+                const lShift = (p > 0 ? p * 12 : 0);
+                const lOpacity = 0.5 + (p > 0 ? p * 0.5 : 0);
+                mockLeft.style.transform = `rotate(${lRotate}deg) translateY(${12 - lShift}px) scale(${lScale})`;
+                mockLeft.style.opacity = `${lOpacity}`;
+
+                // Right mock: comes forward when swiping left (p < 0)
+                const rp = -p;
+                const rScale = 0.92 + (rp > 0 ? rp * 0.16 : 0);
+                const rRotate = 6 - (rp > 0 ? rp * 6 : 0);
+                const rShift = (rp > 0 ? rp * 12 : 0);
+                const rOpacity = 0.5 + (rp > 0 ? rp * 0.5 : 0);
+                mockRight.style.transform = `rotate(${rRotate}deg) translateY(${12 - rShift}px) scale(${rScale})`;
+                mockRight.style.opacity = `${rOpacity}`;
+            }
+
+            function onDragStart(x) {
+                startX = x;
+                currentX = x;
+                isDragging = true;
+                setTransition(false);
+                el.style.cursor = 'grabbing';
+            }
+
+            function onDragMove(x) {
+                if (!isDragging) return;
+                currentX = x;
+                applyDragProgress(currentX - startX);
+            }
+
+            function onDragEnd() {
+                if (!isDragging) return;
+                isDragging = false;
+                el.style.cursor = '';
+                setTransition(true);
+                const diff = currentX - startX;
+                if (Math.abs(diff) > threshold) {
+                    slideMock(diff < 0 ? 1 : -1);
+                } else {
+                    updateMockCarousel();
+                }
+            }
+
+            // Touch events
+            el.addEventListener('touchstart', e => onDragStart(e.touches[0].clientX), { passive: true });
+            el.addEventListener('touchmove', e => onDragMove(e.touches[0].clientX), { passive: true });
+            el.addEventListener('touchend', onDragEnd, { passive: true });
+
+            // Mouse events
+            el.addEventListener('mousedown', e => { e.preventDefault(); onDragStart(e.clientX); });
+            document.addEventListener('mousemove', e => onDragMove(e.clientX));
+            document.addEventListener('mouseup', onDragEnd);
+            el.addEventListener('dragstart', e => e.preventDefault());
+        })();
 
         const iconContainer = document.getElementById('icon-bg');
         const icons = ['utensils', 'chef-hat', 'sparkles', 'brain', 'shopping-cart', 'apple', 'refrigerator'];
