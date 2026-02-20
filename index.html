@@ -213,11 +213,11 @@
             </div>
         </div>
 
-        <!-- Row 1: hero card -->
-        <div class="grid grid-cols-1 gap-4 mb-4">
+        <!-- Row 1: Nota Fiscal + Código de Barras -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
 
             <!-- Big card: Nota Fiscal -->
-            <div class="granger-card bg-white rounded-[2rem] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden group min-h-[340px]">
+            <div class="md:col-span-2 granger-card bg-white rounded-[2rem] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden group min-h-[340px]">
                 <div class="flex flex-col md:flex-row gap-8 items-start">
                     <div class="flex-1">
                         <div class="flex flex-wrap gap-2 mb-6">
@@ -247,10 +247,22 @@
                     </div>
                 </div>
             </div>
-        </div> 
 
-        <!-- Row 2: 3 equal cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <!-- Código de Barras -->
+            <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[340px]">
+                <div>
+                    <h3 class="text-lg font-bold mb-2">Código de Barras</h3>
+                    <p class="text-slate-500 text-[13px] leading-relaxed">Escaneie e reponha itens individualmente. Simples assim.</p>
+                </div>
+                <div class="mt-6 relative h-20 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-0.5 bg-blue-500/60 animate-[scan-move_3s_infinite]"></div>
+                    <i data-lucide="barcode" class="w-16 h-8 text-slate-300"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: 2 equal cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
 
             <!-- Connections / Família -->
             <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[260px]">
@@ -298,18 +310,6 @@
                     </div>
                 </div>
                 <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl"></div>
-            </div>
-
-            <!-- Sport Package / Código de Barras -->
-            <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[260px]">
-                <div>
-                    <h3 class="text-lg font-bold mb-2">Código de Barras</h3>
-                    <p class="text-slate-500 text-[13px] leading-relaxed">Escaneie e reponha itens individualmente. Simples assim.</p>
-                </div>
-                <div class="mt-6 relative h-20 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100 overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-0.5 bg-blue-500/60 animate-[scan-move_3s_infinite]"></div>
-                    <i data-lucide="barcode" class="w-16 h-8 text-slate-300"></i>
-                </div>
             </div>
         </div>
 
