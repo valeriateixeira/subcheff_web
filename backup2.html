@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubCheff | Inteligência Gastronômica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,700;1,700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #fdfdfd; overflow-x: hidden; }
+        h1, h2, h3, .font-title { font-family: 'Lora', serif; }
+        
+        .bg-icons-container { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .floating-icon { position: absolute; opacity: 0.05; color: #0f172a; animation: float-random 12s ease-in-out infinite; }
+        @keyframes float-random { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(10deg); } }
+
+        .iphone-frame-slim {
+            position: relative;
+            border-radius: 2.5rem;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+        }
+
+        /* NEW AI STYLE FOR CARDS */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 2rem;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(37, 99, 235, 0.03) 50%, transparent 100%);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+
+        .feature-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1);
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+        
+        .feature-card:hover::before { transform: translateX(100%); }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .mock-expand { opacity: 0; transform: scale(0.9); transition: all 1s ease-out; }
+        .mock-expand.active { opacity: 1; transform: scale(1); }
+
+        #downloadModal { display: none; }
+        #downloadModal.active { display: flex; }
+
+        /* AI Waveform Animation for the phone section */
+        .waveform { display: flex; align-items: center; gap: 3px; height: 20px; }
+        .wave-bar { width: 3px; background: #60a5fa; border-radius: 10px; animation: wave-grow 1s ease-in-out infinite; }
+        @keyframes wave-grow { 0%, 100% { height: 5px; } 50% { height: 20px; } }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <div id="icon-bg" class="bg-icons-container"></div>
+
+    <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-slate-100 px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <img src="./assets/subcheff_logo_preto.svg" alt="SubCheff" class="h-8">
+            <span class="text-xl font-bold tracking-tight">SubCheff</span>
+        </div>
+        <a href="#waitlist" class="bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-blue-600 transition">Acesso Antecipado</a>
+    </nav>
+
+    <section class="pt-40 pb-20 px-6 text-center relative z-10">
+        <div class="reveal flex flex-col items-center">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> Chef AI & Smart Inventory
+            </div>
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-[#0f172a] leading-tight">
+                Sua cozinha em <br> <span class="text-blue-600 italic">piloto automático.</span>
+            </h1>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-10">Do QR Code da nota fiscal à sugestão do jantar pela Alexa. O SubCheff é o cérebro que faltava na sua casa.</p>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-16">
+                <button onclick="openModal()" class="flex items-center gap-3 bg-slate-900 text-white px-8 py-3 rounded-2xl hover:scale-105 transition">
+                    <i data-lucide="apple" class="fill-white"></i> <span>App Store</span>
+                </button>
+                <button onclick="openModal()" class="flex items-center gap-3 bg-slate-900 text-white px-8 py-3 rounded-2xl hover:scale-105 transition">
+                    <i data-lucide="play" class="fill-white"></i> <span>Google Play</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="mock-expand max-w-5xl mx-auto grid grid-cols-3 gap-4 items-center px-4">
+            <div class="iphone-frame-slim rotate-[-6deg] translate-y-12 opacity-60"><img src="./assets/despensa.png" alt="Despensa"></div>
+            <div class="iphone-frame-slim z-10 scale-110 shadow-2xl"><img src="./assets/pratododia.png" alt="Principal"></div>
+            <div class="iphone-frame-slim rotate-[6deg] translate-y-12 opacity-60"><img src="./assets/gastos.png" alt="Gastos"></div>
+        </div>
+    </section>
+
+    <section class="py-32 bg-slate-50/50 px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-20 reveal">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Gestão sem esforço</h2>
+                <p class="text-slate-500">Tudo o que você precisa para dominar o inventário e o bolso.</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="feature-card reveal group">
+                    <div class="w-12 h-12 bg-blue-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200 group-hover:scale-110 transition"><i data-lucide="qr-code"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Entrada Inteligente</h3>
+                    <p class="text-slate-500 text-sm">Escaneie o QR Code da nota fiscal ou código de barras. Temos a maior base de produtos brasileiros do mercado.</p>
+                </div>
+                <div class="feature-card reveal group">
+                    <div class="w-12 h-12 bg-orange-500 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-orange-200 group-hover:scale-110 transition"><i data-lucide="bell-ring"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Alerta de Validade</h3>
+                    <p class="text-slate-500 text-sm">Nunca mais jogue comida fora. O SubCheff avisa quando um item na geladeira ou despensa está para vencer.</p>
+                </div>
+                <div class="feature-card reveal group">
+                    <div class="w-12 h-12 bg-purple-600 text-white rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-purple-200 group-hover:scale-110 transition"><i data-lucide="refresh-cw"></i></div>
+                    <h3 class="text-xl font-bold mb-2">Sincronia Familiar</h3>
+                    <p class="text-slate-500 text-sm">Dados na nuvem. Compartilhe sua despensa, cookbook e lista de compras com todos da casa em tempo real.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-24 bg-slate-900 text-white overflow-hidden relative">
+        <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+            <div class="reveal">
+                <span class="text-blue-400 font-bold tracking-widest uppercase text-xs">Inteligência Artificial</span>
+                <h2 class="text-4xl md:text-5xl font-bold mt-4 mb-8 leading-tight">"Alexa, avisa o SubCheff que o <span class="italic text-blue-400">leite acabou.</span>"</h2>
+                
+                <div class="space-y-8">
+                    <div class="flex gap-4">
+                        <div class="bg-white/10 p-3 rounded-2xl h-fit"><i data-lucide="chef-hat" class="text-blue-400"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">Sugestão do Dia</h4>
+                            <p class="text-slate-400 text-sm">IA que sugere café, almoço e jantar baseada no que você tem e nas suas preferências.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="bg-white/10 p-3 rounded-2xl h-fit"><i data-lucide="mic" class="text-blue-400"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">Voz & Alexa</h4>
+                            <p class="text-slate-400 text-sm">Adicione itens à lista ou dê baixa no estoque apenas falando, sem interromper o preparo.</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-4">
+                        <div class="bg-white/10 p-3 rounded-2xl h-fit"><i data-lucide="video" class="text-blue-400"></i></div>
+                        <div>
+                            <h4 class="font-bold text-lg">Passo a Passo Visual</h4>
+                            <p class="text-slate-400 text-sm">Receitas detalhadas com fotos e vídeos para você nunca errar o ponto.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="relative flex justify-center reveal">
+                <div class="w-72 h-[550px] bg-slate-800 rounded-[3rem] border-[8px] border-slate-700 overflow-hidden shadow-2xl shadow-blue-500/20 relative">
+                    <div class="absolute inset-0 bg-gradient-to-b from-blue-900/20 to-slate-900 z-10"></div>
+                    <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&q=80&w=800" class="w-full h-full object-cover opacity-60" alt="Interface IA">
+                    
+                    <div class="absolute bottom-10 left-0 w-full px-6 z-20 text-center">
+                        <div class="flex justify-center gap-1 mb-4 h-8 items-center">
+                            <div class="wave-bar" style="animation-delay: 0.1s"></div>
+                            <div class="wave-bar" style="animation-delay: 0.3s"></div>
+                            <div class="wave-bar" style="animation-delay: 0.2s"></div>
+                            <div class="wave-bar" style="animation-delay: 0.4s"></div>
+                            <div class="wave-bar" style="animation-delay: 0.1s"></div>
+                        </div>
+                        <p class="text-xs font-medium text-blue-300 mb-1">Ouvindo...</p>
+                        <p class="text-sm font-bold text-white">"Adicionar leite ao estoque"</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="py-32 bg-white px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-20 items-center">
+                <div class="order-2 md:order-1 reveal">
+                    <div class="p-8 bg-slate-50 rounded-[2.5rem] border border-slate-100 shadow-inner">
+                        <div class="flex justify-between items-end mb-8">
+                            <div>
+                                <p class="text-xs font-bold text-slate-400 uppercase">Gasto Mensal</p>
+                                <h4 class="text-3xl font-bold text-slate-900">R$ 1.240,00</h4>
+                            </div>
+                            <i data-lucide="trending-down" class="text-green-500 w-8 h-8"></i>
+                        </div>
+                        <div class="space-y-4">
+                            <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden"><div class="h-full bg-blue-600 w-[70%]"></div></div>
+                            <p class="text-xs text-slate-500 italic">Você economizou 12% comparado ao mês passado.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="order-1 md:order-2 reveal">
+                    <h2 class="text-4xl font-bold mb-6">Seu dinheiro valorizado.</h2>
+                    <ul class="space-y-6 text-slate-600">
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="text-green-500"></i> Dashboard de gastos mensais automáticos.</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="text-green-500"></i> Estatística de mudança de preços de cada produto.</li>
+                        <li class="flex items-center gap-3"><i data-lucide="check-circle-2" class="text-green-500"></i> Valor total da lista nos mercados mais próximos.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="waitlist" class="py-24 bg-slate-50 border-t border-slate-200 px-6 text-center relative z-10">
+        <h2 class="text-4xl font-bold mb-4">Pronto para a revolução?</h2>
+        <p class="text-slate-500 mb-10 max-w-md mx-auto">Inscreva-se para ser um dos primeiros a testar a versão Beta.</p>
+        
+        <form class="max-w-md mx-auto flex flex-col md:flex-row gap-3 mb-12">
+            <input type="email" placeholder="Seu melhor e-mail" required class="flex-1 px-6 py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-blue-100 transition">
+            <button class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200">Avisar-me</button>
+        </form>
+
+        <div class="flex justify-center gap-8 text-slate-400 mb-8">
+            <a href="#" class="hover:text-pink-600 transition"><i data-lucide="instagram"></i></a>
+            <a href="#" class="hover:text-black transition"><i data-lucide="twitter"></i></a>
+        </div>
+        <p class="text-xs text-slate-400 uppercase tracking-widest">© 2026 SubCheff App — Tecnologia Brasileira.</p>
+    </footer>
+
+    <div id="downloadModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full relative z-10 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6"><i data-lucide="hourglass" class="animate-spin"></i></div>
+            <h3 class="text-2xl font-bold mb-2">Quase lá!</h3>
+            <p class="text-slate-500 mb-8">Estamos finalizando os últimos ajustes nos nossos servidores.</p>
+            <button onclick="closeModal()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold">Entendido</button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        function openModal() { document.getElementById('downloadModal').classList.add('active'); }
+        function closeModal() { document.getElementById('downloadModal').classList.remove('active'); }
+
+        const iconContainer = document.getElementById('icon-bg');
+        const icons = ['utensils', 'chef-hat', 'sparkles', 'brain', 'shopping-cart', 'apple', 'refrigerator'];
+        for (let i = 0; i < 25; i++) {
+            const div = document.createElement('div');
+            div.className = 'floating-icon';
+            div.style.left = Math.random() * 100 + '%';
+            div.style.top = Math.random() * 100 + '%';
+            div.style.animationDelay = (Math.random() * 8) + 's';
+            div.innerHTML = `<i data-lucide="${icons[Math.floor(Math.random() * icons.length)]}"></i>`;
+            iconContainer.appendChild(div);
+        }
+        lucide.createIcons();
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal, .mock-expand').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

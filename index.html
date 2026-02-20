@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubCheff | Inteligência Gastronômica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,700;1,700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Outfit', sans-serif; background-color: #fdfdfd; overflow-x: hidden; }
+        h1, h2, .font-title { font-family: 'Lora', serif; }
+        
+        .bg-icons-container { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+        .floating-icon { position: absolute; opacity: 0.05; color: #0f172a; animation: float-random 12s ease-in-out infinite; }
+        @keyframes float-random { 0%, 100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(10deg); } }
+
+        .iphone-frame-slim {
+            position: relative;
+            border-radius: 2.5rem;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            transition: all 0.5s ease;
+        }
+
+        /* AI STYLE FEATURE CARDS */
+        .feature-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 2rem;
+            border: 1px solid rgba(37, 99, 235, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .feature-card:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.08); 
+            border-color: rgba(37, 99, 235, 0.3);
+        }
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(37, 99, 235, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: 0.6s;
+        }
+        .feature-card:hover::after { transform: translateX(100%); }
+
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        
+        .mock-expand { opacity: 0; transform: scale(0.9); transition: all 1s ease-out; }
+        .mock-expand.active { opacity: 1; transform: scale(1); }
+
+        /* Waveform Animation */
+        .wave-bar { width: 3px; background: #60a5fa; border-radius: 10px; animation: wave-grow 1s ease-in-out infinite; }
+        @keyframes wave-grow { 0%, 100% { height: 8px; } 50% { height: 24px; } }
+
+        #downloadModal { display: none; }
+        #downloadModal.active { display: flex; }
+
+        /* === PREMIUM UPGRADES === */
+
+        /* Bento card base + hover lift */
+        .bento-card {
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+                        border-color 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 8px rgba(0,0,0,0.03);
+        }
+        .bento-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.04);
+        }
+
+        /* Subtle dot grid for hero */
+        .hero-dots {
+            background-image: radial-gradient(circle, rgba(148, 163, 184, 0.25) 1px, transparent 1px);
+            background-size: 28px 28px;
+        }
+
+        /* Negative tracking on card titles for crispness */
+        h3 { letter-spacing: -0.02em; }
+
+        /* Refined section badge */
+        .section-badge {
+            background: white;
+            border: 1px solid rgba(226, 232, 240, 0.9);
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+
+        /* Granger-style cards */
+        .granger-card {
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+        .granger-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.03);
+        }
+
+        /* Alexa floating element */
+        .alexa-float {
+            animation: alexa-bob 4s ease-in-out infinite;
+        }
+        @keyframes alexa-bob {
+            0%, 100% { transform: translateY(0) rotate(3deg); }
+            50% { transform: translateY(-12px) rotate(3deg); }
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <div id="icon-bg" class="bg-icons-container"></div>
+
+    <!-- Floating mascot - fixed on left side -->
+    <div id="floating-mascot" class="fixed left-4 md:left-6 bottom-6 z-40" style="opacity: 0; transform: translateX(-100px); transition: opacity 0.5s ease, transform 0.5s ease;">
+        <!-- Speech bubble -->
+        <div id="mascot-bubble" class="absolute bottom-full left-1/2 mb-3 opacity-0 pointer-events-none transition-all duration-300 -translate-y-2" style="min-width: 220px; transform-origin: bottom center;">
+            <div class="bg-white rounded-2xl shadow-xl shadow-slate-900/10 border border-slate-100 p-4 relative">
+                <p class="text-sm text-slate-700 font-medium leading-relaxed">Oi! Eu sou o <span class="text-blue-600 font-bold">SubCheff</span>, e vou te auxiliar na cozinha! 👋</p>
+                <!-- Triangle pointer -->
+                <div class="absolute -bottom-2 left-8 w-4 h-4 bg-white border-r border-b border-slate-100 rotate-45"></div>
+            </div>
+        </div>
+        <div id="mascot-circle" class="relative w-24 h-24 overflow-hidden rounded-full shadow-2xl shadow-slate-900/15 border-3 border-white cursor-pointer scale-105">
+            <video id="mascot-video" class="mascot-video w-full h-full object-cover object-center" muted playsinline autoplay>
+                <source src="./assets/mascote-float.mp4" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-lg border-b border-slate-100 px-8 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+            <img src="./assets/subcheff_logo_preto.svg" alt="SubCheff" class="h-8">
+            <span class="text-xl font-bold tracking-tight">SubCheff</span>
+        </div>
+        <a href="#waitlist" class="bg-slate-900 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-blue-600 transition">Acesso Antecipado</a>
+    </nav>
+
+    <section class="pt-40 pb-20 px-6 text-center relative z-10">
+        <div class="hero-dots absolute inset-0 pointer-events-none z-0 opacity-70"></div>
+        <div class="reveal flex flex-col items-center relative z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 text-blue-600 text-xs font-bold uppercase tracking-widest mb-6">
+                <i data-lucide="sparkles" class="w-4 h-4"></i> Chef AI & Smart Inventory
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 text-[#0f172a] leading-tight">
+                Sua cozinha em <br> <span class="text-blue-600 italic">piloto automático.</span>
+            </h1>
+           <p class="text-lg text-slate-500 max-w-2xl mx-auto mb-10">
+    Assuma o controle total da sua despensa e receba sugestões inteligentes de receitas e preparo. O <span class="text-slate-900 font-semibold">SubCheff</span> deixa sua cozinha <span class="text-slate-900 font-semibold">inteligente.</span>
+</p>
+            
+            
+<div class="flex flex-wrap justify-center gap-4 mb-16">
+                <button onclick="openModal()" class="flex items-center gap-3 bg-slate-900 text-white px-7 py-3 rounded-2xl hover:scale-105 transition shadow-lg">
+    <svg viewBox="0 0 384 512" width="25" height="25" fill="white" xmlns="http://www.w3.org/2000/svg">
+        <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+    </svg>
+    <span >App Store</span>
+</button>
+                <button onclick="openModal()" class="flex items-center gap-3 bg-slate-900 text-white px-8 py-3 rounded-2xl hover:scale-105 transition shadow-lg">
+                    <i data-lucide="play" class="fill-white"></i> <span>Google Play</span>
+                </button>
+            </div>
+            
+        </div>
+
+        <div class="mock-expand max-w-5xl mx-auto relative px-4 z-10 mt-4">
+            <div class="grid grid-cols-3 gap-4 items-center">
+                <div class="iphone-frame-slim rotate-[-6deg] translate-y-12 opacity-60"><img src="./assets/despensa.png" alt="Despensa"></div>
+                <div class="iphone-frame-slim z-10 scale-110 shadow-2xl border-4 border-slate-900"><img src="./assets/pratododia.png" alt="Principal"></div>
+                <div class="iphone-frame-slim rotate-[6deg] translate-y-12 opacity-60"><img src="./assets/explore.png" alt="Gastos"></div>
+            </div>
+            <!-- Alexa hint - floating right -->
+            <div class="alexa-float absolute -top-8 -right-2 md:right-4 z-20">
+                <div class="relative">
+                    <img src="./assets/alexa.png" alt="Alexa" class="w-20 md:w-28 h-20 md:h-28 object-cover rounded-full shadow-2xl shadow-blue-500/30 border-4 border-white">
+                    <div class="absolute -top-2 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-tight shadow-lg flex items-center gap-1.5">
+                        <i data-lucide="mic" class="w-3 h-3"></i> Alexa
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </section>
+
+<section class="py-32 bg-[#f5f0eb] px-6 relative z-10 overflow-hidden">
+    <div class="max-w-6xl mx-auto relative z-10">
+
+        <!-- Section Header - editorial style -->
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 reveal">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border border-slate-200/60 shadow-sm">
+                    O Beneficio
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold leading-tight">Explore nossa<br>despensa <span class="text-blue-600 italic">inteligente.</span></h2>
+            </div>
+            <div class="flex flex-wrap gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/60 text-xs text-slate-600 font-medium shadow-sm"><i data-lucide="qr-code" class="w-3 h-3"></i> Nota Fiscal</span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/60 text-xs text-slate-600 font-medium shadow-sm"><i data-lucide="camera" class="w-3 h-3"></i> IA Visual</span>
+            </div>
+        </div>
+
+        <!-- Row 1: 2-col hero card + sidebar card -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+            <!-- Big card: Nota Fiscal -->
+            <div class="md:col-span-2 granger-card bg-white rounded-[2rem] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden group min-h-[340px]">
+                <div class="flex flex-col md:flex-row gap-8 items-start">
+                    <div class="flex-1">
+                        <div class="flex flex-wrap gap-2 mb-6">
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Leitura Automática</span>
+                        </div>
+                        <h3 class="text-2xl md:text-3xl font-bold mb-4 leading-tight">Notas Fiscais<br>em segundos.</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed max-w-sm">
+                            Voltou do mercado? Aponte para o <span class="text-blue-600 font-semibold">QR Code da nota</span> e tudo cai na despensa. Zero digitação.
+                        </p>
+                    </div>
+                    <div class="flex flex-col items-end gap-3 shrink-0">
+                        <div class="inline-flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-100">
+                            <div class="flex items-center justify-center w-8 h-8 bg-blue-600 rounded-lg text-white">
+                                <i data-lucide="database" class="w-4 h-4"></i>
+                            </div>
+                            <div class="flex flex-col">
+                                <span class="text-xs font-bold text-slate-900">+100 mil</span>
+                                <span class="text-[9px] text-slate-400 font-medium uppercase tracking-tight">Produtos BR</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-end justify-between mt-8">
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full uppercase">QR Code</span>
+                        <span class="px-3 py-1 bg-slate-100 text-slate-600 text-[10px] font-bold rounded-full uppercase">NFC-e</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar: dark card - Integração por Voz -->
+            <div class="granger-card bg-[#0f172a] rounded-[2rem] p-8 text-white flex flex-col justify-between relative overflow-hidden min-h-[340px]">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">Integração</span>
+                        <span class="px-2.5 py-1 bg-white/10 text-[9px] font-bold rounded-full text-blue-300 uppercase">Voz</span>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 leading-tight">Controle<br>por Voz</h3>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        "Alexa, avisa o SubCheff que o leite acabou." Gerencie sua despensa sem tocar no celular.
+                    </p>
+                </div>
+                <div>
+                    <img src="./assets/alexa3.png" alt="Alexa" class="w-full h-32 object-cover rounded-2xl mb-4 opacity-80">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></div>
+                            <span class="text-[10px] font-bold text-slate-500 uppercase">Alexa & Google Home</span>
+                        </div>
+                        <div class="flex -space-x-2">
+                            <img src="https://ui-avatars.com/api/?name=V&background=3b82f6&color=fff&size=32" class="w-6 h-6 rounded-full border-2 border-[#0f172a]" alt="">
+                            <img src="https://ui-avatars.com/api/?name=M&background=8b5cf6&color=fff&size=32" class="w-6 h-6 rounded-full border-2 border-[#0f172a]" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 2: 3 equal cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+
+            <!-- Connections / Família -->
+            <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[260px]">
+                <div>
+                    <h3 class="text-lg font-bold mb-2">Sincronia Familiar</h3>
+                    <p class="text-slate-500 text-[13px] leading-relaxed">Todos da casa conectados em tempo real.</p>
+                </div>
+                <div class="mt-4">
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="https://ui-avatars.com/api/?name=Mae&background=9333ea&color=fff&size=36" class="w-9 h-9 rounded-full border-2 border-purple-100" alt="Mãe">
+                        <img src="https://ui-avatars.com/api/?name=Vo&background=6b7280&color=fff&size=36" class="w-9 h-9 rounded-full border-2 border-slate-100" alt="Vó">
+                        <div class="w-9 h-9 rounded-full bg-slate-50 border-2 border-dashed border-slate-200 flex items-center justify-center">
+                            <i data-lucide="plus" class="w-4 h-4 text-slate-400"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-[10px] font-bold text-slate-500 uppercase tracking-tight">Sincronizado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Monitoramento Preditivo - featured dark card -->
+            <div class="granger-card bg-[#1e3a5f] rounded-[2rem] p-7 text-white flex flex-col justify-between group relative overflow-hidden min-h-[260px]">
+                <div class="relative z-10">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-blue-300/70 mb-3 block">Estoque Inteligente</span>
+                    <h3 class="text-lg font-bold mb-2">Reposição<br>Automática</h3>
+                    <p class="text-blue-100/60 text-[13px] leading-relaxed">Analisa seu ritmo de consumo e avisa antes de acabar.</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-3.5 mt-4 relative z-10 border border-white/5">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center shrink-0">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+                        </div>
+                        <div>
+                            <p class="text-[11px] font-bold text-white leading-snug">Quinta-feira está previsto que o arroz vai acabar.</p>
+                            <p class="text-[9px] text-blue-300/60 mt-0.5">Baseado no consumo das últimas 3 semanas</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-end justify-between mt-4 relative z-10">
+                    <div class="flex gap-3">
+                        <span class="px-2.5 py-1 bg-amber-500/20 text-[9px] font-bold rounded-full text-amber-300 uppercase">Arroz 8%</span>
+                        <span class="px-2.5 py-1 bg-white/10 text-[9px] font-bold rounded-full text-blue-200 uppercase">Leite 50%</span>
+                    </div>
+                </div>
+                <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-blue-400/10 rounded-full blur-2xl"></div>
+            </div>
+
+            <!-- Sport Package / Código de Barras -->
+            <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[260px]">
+                <div>
+                    <h3 class="text-lg font-bold mb-2">Código de Barras</h3>
+                    <p class="text-slate-500 text-[13px] leading-relaxed">Escaneie e reponha itens individualmente. Simples assim.</p>
+                </div>
+                <div class="mt-6 relative h-20 bg-slate-50 rounded-2xl flex items-center justify-center border border-slate-100 overflow-hidden">
+                    <div class="absolute top-0 left-0 w-full h-0.5 bg-blue-500/60 animate-[scan-move_3s_infinite]"></div>
+                    <i data-lucide="barcode" class="w-16 h-8 text-slate-300"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Row 3: Featured section header -->
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-8 mt-16 reveal">
+            <div>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/60 text-[10px] text-slate-500 font-bold uppercase tracking-widest shadow-sm"><i data-lucide="zap" class="w-3 h-3"></i> Recursos</span>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white border border-slate-200/60 text-[10px] text-slate-500 font-bold uppercase tracking-widest shadow-sm"><i data-lucide="shield-check" class="w-3 h-3"></i> Seguranca</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold leading-tight">Fique no controle com<br>recursos <span class="text-blue-600 italic">inteligentes.</span></h2>
+            </div>
+            <p class="text-slate-500 max-w-sm text-sm leading-relaxed md:text-right">Sua jornada culinaria comeca aqui com ferramentas pensadas para o dia a dia.</p>
+        </div>
+
+        <!-- Row 3: Stats bar + cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
+
+            <!-- Sugestões do Dia card wide -->
+            <div class="md:col-span-2 granger-card bg-white rounded-[2rem] p-8 flex flex-col justify-between min-h-[300px] group">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Cardápio Inteligente</span>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-3 leading-tight">Prato do Dia</h3>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-md">
+                        O SubCheff monta seu cardápio diário completo — escolhendo receitas para cada refeição com base nos seus <span class="text-slate-700 font-semibold">gostos pessoais</span> e no que você <span class="text-slate-700 font-semibold">já tem na despensa</span>.
+                    </p>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-5">
+                    <div class="bg-amber-50 rounded-xl p-3 border border-amber-100">
+                        <p class="text-[8px] font-bold text-amber-500 uppercase mb-1.5">☀️ Café da Manhã</p>
+                        <p class="text-[12px] font-bold text-slate-700 leading-snug">Tapioca com Queijo e Tomate</p>
+                        <p class="text-[9px] text-slate-400 mt-1">15 min · 280 kcal</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-xl p-3 border border-blue-100">
+                        <p class="text-[8px] font-bold text-blue-500 uppercase mb-1.5">🍽️ Almoço</p>
+                        <p class="text-[12px] font-bold text-slate-700 leading-snug">Frango Grelhado com Arroz e Salada</p>
+                        <p class="text-[9px] text-slate-400 mt-1">35 min · 520 kcal</p>
+                    </div>
+                    <div class="bg-emerald-50 rounded-xl p-3 border border-emerald-100">
+                        <p class="text-[8px] font-bold text-emerald-500 uppercase mb-1.5">🥤 Lanche</p>
+                        <p class="text-[12px] font-bold text-slate-700 leading-snug">Smoothie de Banana com Aveia</p>
+                        <p class="text-[9px] text-slate-400 mt-1">5 min · 190 kcal</p>
+                    </div>
+                    <div class="bg-violet-50 rounded-xl p-3 border border-violet-100">
+                        <p class="text-[8px] font-bold text-violet-500 uppercase mb-1.5">🌙 Janta</p>
+                        <p class="text-[12px] font-bold text-slate-700 leading-snug">Sopa de Legumes com Torrada</p>
+                        <p class="text-[9px] text-slate-400 mt-1">25 min · 310 kcal</p>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mt-4">
+                    <div class="flex gap-2">
+                        <span class="px-3 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full uppercase">IA Personalizada</span>
+                        <span class="px-3 py-1 bg-amber-50 text-amber-700 text-[10px] font-bold rounded-full uppercase">Baseado na Despensa</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- IA Visual card -->
+            <div class="granger-card bg-[#f0fdf4] rounded-[2rem] p-7 flex flex-col justify-between group min-h-[300px]">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-emerald-600/60 mb-3 block">IA Visual</span>
+                    <h3 class="text-lg font-bold mb-2">Identificação<br>por Foto</h3>
+                    <p class="text-slate-500 text-[13px] leading-relaxed">Tire uma foto e nossa IA reconhece o item instantaneamente.</p>
+                </div>
+                <!-- Apple photo scan example -->
+                <div class="relative w-full h-28 bg-white rounded-2xl overflow-hidden border border-emerald-200 mt-4">
+                    <div class="absolute top-0 left-0 w-full h-0.5 bg-emerald-500 shadow-[0_0_10px_#10b981] animate-[scan-move_3s_infinite] z-10"></div>
+                    <div class="flex items-center h-full px-4 gap-3">
+                        <div class="relative shrink-0">
+                            <img src="./assets/maca.png" alt="Maçã" class="w-16 h-16 object-cover rounded-xl border-2 border-dashed border-emerald-400/50">
+                            <div class="absolute -top-1 -right-1 w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center">
+                                <i data-lucide="check" class="w-3 h-3 text-white"></i>
+                            </div>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[10px] text-emerald-600 font-bold uppercase tracking-wide mb-1">Identificado</p>
+                            <p class="text-sm font-bold text-slate-800 leading-tight">Maçã Fuji</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">Confiança: 98.2%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-end justify-between mt-3">
+                    <div class="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full border border-emerald-200 shadow-sm">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                        <span class="text-[10px] font-bold text-emerald-700 uppercase">Detectado</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Previsao / Validade card -->
+            <div class="granger-card bg-orange-500 rounded-[2rem] p-7 text-white flex flex-col justify-between group relative overflow-hidden min-h-[300px]">
+                <div class="relative z-10">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-orange-100/70 mb-3 block">Controle de Validade</span>
+                    <h3 class="text-lg font-bold mb-2">Nada vence<br> ou é esquecido.</h3>
+                    <p class="text-orange-100/80 text-[13px] leading-relaxed"> automáticos antes do vencimento.</p>
+                </div>
+                <!-- Visual: expiring items list -->
+                <div class="space-y-2 mt-4 relative z-10">
+                    <div class="flex items-center gap-3 bg-white/15 backdrop-blur rounded-xl px-3 py-2.5">
+                        <div class="w-8 h-8 bg-red-400/30 rounded-lg flex items-center justify-center shrink-0">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-white"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[11px] font-bold leading-tight">Iogurte Natural</p>
+                            <p class="text-[9px] text-orange-100/60">Geladeira</p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-[11px] font-black text-yellow-200">Amanhã</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/10 backdrop-blur rounded-xl px-3 py-2.5">
+                        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center shrink-0">
+                            <i data-lucide="clock" class="w-4 h-4 text-orange-100/70"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[11px] font-bold leading-tight">Peito de Frango</p>
+                            <p class="text-[9px] text-orange-100/60">Freezer</p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-[11px] font-bold text-orange-100">3 dias</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/5 backdrop-blur rounded-xl px-3 py-2.5 opacity-60">
+                        <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center shrink-0">
+                            <i data-lucide="check-circle" class="w-4 h-4 text-orange-100/50"></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="text-[11px] font-bold leading-tight">Queijo Minas</p>
+                            <p class="text-[9px] text-orange-100/60">Geladeira</p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-[11px] font-bold text-orange-100/70">12 dias</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-orange-400/50 rounded-full blur-3xl"></div>
+            </div>
+        </div>
+
+        <!-- Row 4: bottom row -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- Receitas Passo a Passo Interativo -->
+            <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[240px]">
+                <div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-2 block">Modo Cozinha</span>
+                    <h3 class="text-lg font-bold mb-2">Passo a Passo Interativo</h3>
+                    <p class="text-slate-500 text-[13px] leading-relaxed">Siga cada etapa no seu ritmo com <span class="text-slate-700 font-semibold">ingredientes e utensílios</span> por passo.</p>
+                </div>
+                <!-- Compact steps mockup -->
+                <div class="space-y-1.5 mt-4">
+                    <div class="flex items-center gap-2.5 bg-emerald-50 rounded-lg px-3 py-2 border border-emerald-100">
+                        <div class="w-4 h-4 rounded-full bg-emerald-500 flex items-center justify-center shrink-0">
+                            <i data-lucide="check" class="w-2.5 h-2.5 text-white"></i>
+                        </div>
+                        <p class="text-[11px] font-bold text-slate-400 line-through flex-1">Corte o frango em cubos</p>
+                        <span class="text-[8px] font-bold text-emerald-600 bg-emerald-100 px-1.5 py-0.5 rounded-full shrink-0">🔪 Faca</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 bg-blue-50 rounded-lg px-3 py-2 border-2 border-blue-300">
+                        <div class="w-4 h-4 rounded-full border-2 border-blue-400 bg-white flex items-center justify-center shrink-0">
+                            <span class="text-[7px] font-black text-blue-500">2</span>
+                        </div>
+                        <p class="text-[11px] font-bold text-slate-800 flex-1">Refogue cebola e alho</p>
+                        <span class="text-[8px] font-bold text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full shrink-0">🍳 Frigideira</span>
+                    </div>
+                    <div class="flex items-center gap-2.5 bg-slate-50/50 rounded-lg px-3 py-2 border border-slate-100 opacity-40">
+                        <div class="w-4 h-4 rounded-full border-2 border-slate-200 bg-white flex items-center justify-center shrink-0">
+                            <span class="text-[7px] font-black text-slate-300">3</span>
+                        </div>
+                        <p class="text-[11px] font-bold text-slate-400 flex-1">Tempere e finalize</p>
+                    </div>
+                </div>
+                <div class="flex gap-2 mt-3">
+                    <span class="px-3 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded-full uppercase">Interativo</span>
+                </div>
+            </div>
+
+            <!-- Seguranca Alimentar -->
+            <div class="granger-card bg-[#fff7ed] rounded-[2rem] p-7 flex flex-col justify-between group min-h-[240px] relative overflow-hidden">
+                <div class="relative z-10">
+                    <span class="text-[10px] font-bold uppercase tracking-widest text-rose-400 mb-2 block">Proteção</span>
+                    <h3 class="text-lg font-bold mb-2">Segurança Alimentar</h3>
+                    <p class="text-slate-500 text-[13px] leading-relaxed">Filtre receitas por alérgenos e restrições. Configure uma vez e todas as receitas são filtradas automaticamente.</p>
+                </div>
+                <!-- Visual restriction alerts -->
+                <div class="space-y-1.5 mt-4 relative z-10">
+                    <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-rose-100">
+                        <div class="w-5 h-5 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                            <i data-lucide="shield-alert" class="w-3 h-3 text-rose-500"></i>
+                        </div>
+                        <p class="text-[11px] text-slate-700 flex-1"><span class="font-bold">Glúten</span> detectado</p>
+                        <span class="text-[9px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">Bloqueado</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-rose-100">
+                        <div class="w-5 h-5 rounded-full bg-rose-100 flex items-center justify-center shrink-0">
+                            <i data-lucide="shield-alert" class="w-3 h-3 text-rose-500"></i>
+                        </div>
+                        <p class="text-[11px] text-slate-700 flex-1"><span class="font-bold">Lactose</span> detectada</p>
+                        <span class="text-[9px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200">Bloqueado</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-white rounded-lg px-3 py-2 border border-emerald-100">
+                        <div class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
+                            <i data-lucide="shield-check" class="w-3 h-3 text-emerald-500"></i>
+                        </div>
+                        <p class="text-[11px] text-slate-700 flex-1"><span class="font-bold">Receita segura</span></p>
+                        <span class="text-[9px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">Aprovada ✓</span>
+                    </div>
+                </div>
+                <div class="flex flex-wrap gap-1.5 mt-3 relative z-10">
+                    <span class="text-[9px] font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-full border border-rose-200">Sem Glúten</span>
+                    <span class="text-[9px] font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-full border border-rose-200">Sem Lactose</span>
+                    <span class="text-[9px] font-bold text-amber-700 bg-amber-100 px-2.5 py-1 rounded-full border border-amber-200">Vegano</span>
+                </div>
+                <div class="absolute -right-8 -bottom-8 w-32 h-32 bg-rose-200/30 rounded-full blur-2xl"></div>
+            </div>
+
+            <!-- Lista de Compras -->
+            <div class="md:col-span-2 granger-card bg-[#0f172a] rounded-[2rem] p-8 text-white flex flex-col md:flex-row md:items-center justify-between gap-6 group min-h-[120px]">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-blue-500 text-white rounded-2xl flex items-center justify-center shadow-lg shrink-0">
+                        <i data-lucide="shopping-cart" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <h3 class="text-lg font-bold">Lista de Compras Inteligente</h3>
+                            <span class="px-2.5 py-0.5 bg-blue-500 text-[9px] font-bold rounded-full text-white uppercase">Em Breve</span>
+                        </div>
+                        <p class="text-slate-400 text-[13px]">Seu café acabou? Já está na lista. Compartilhe com quem for ao mercado.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4 shrink-0">
+                    <div class="flex items-center gap-2 text-[11px] text-slate-500">
+                        <div class="w-4 h-4 rounded border border-blue-500/30 bg-blue-500/10 flex items-center justify-center"><i data-lucide="check" class="w-2.5 h-2.5 text-blue-400"></i></div>
+                        <span class="line-through">Leite Integral</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-[11px] text-slate-300 font-medium">
+                        <div class="w-4 h-4 rounded border border-slate-600"></div>
+                        <span>Café Pilão 500g</span>
+                    </div>
+                    <div class="flex items-center gap-2 text-[11px] text-slate-300 font-medium">
+                        <div class="w-4 h-4 rounded border border-slate-600"></div>
+                        <span>Arroz 5kg</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Auto-Categorização -->
+            <div class="md:col-span-2 granger-card bg-white rounded-[2rem] p-8 flex flex-col md:flex-row md:items-center justify-between gap-6 group min-h-[120px]">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-emerald-600 text-white rounded-2xl flex items-center justify-center shadow-lg">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold">Auto-Organizacao por IA</h3>
+                        <p class="text-slate-500 text-[13px]">Cada item e categorizado automaticamente. Tudo no lugar certo.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-2 px-3 py-2 bg-indigo-50 rounded-xl border border-indigo-100">
+                        <span class="text-[10px] font-mono text-indigo-700">Arroz</span>
+                        <i data-lucide="arrow-right" class="w-3 h-3 text-indigo-400"></i>
+                        <span class="text-[9px] bg-indigo-600 text-white px-2 py-0.5 rounded-full font-bold">Despensa</span>
+                    </div>
+                    <div class="flex items-center gap-2 px-3 py-2 bg-emerald-50 rounded-xl border border-emerald-100">
+                        <span class="text-[10px] font-mono text-emerald-700">Leite</span>
+                        <i data-lucide="arrow-right" class="w-3 h-3 text-emerald-400"></i>
+                        <span class="text-[9px] bg-emerald-600 text-white px-2 py-0.5 rounded-full font-bold">Geladeira</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<style>
+    @keyframes scan-move {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(160px); }
+    }
+    .animate-scan-move {
+        animation: scan-move 3s infinite linear;
+    }
+</style>
+
+<style>
+    @keyframes scan-move {
+    0% { top: 0; }
+    100% { top: 100%; }
+}
+
+@keyframes barcode-laser {
+    0%, 100% { transform: translateY(-10px); opacity: 0.5; }
+    50% { transform: translateY(10px); opacity: 1; }
+}
+    @keyframes hammer-hit {
+    0%, 100% { transform: rotate(0deg); }
+    30% { transform: rotate(-35deg); } /* Levanta o martelo */
+    45% { transform: rotate(10deg) translateY(2px); } /* Bate */
+    55% { transform: rotate(10deg) translateY(2px); } /* Curta pausa no impacto */
+}
+
+.animate-hammer {
+    display: inline-block;
+    transform-origin: bottom right; /* Ponto de rotação no cabo */
+    animation: hammer-hit 1.2s ease-in-out infinite;
+}
+    @keyframes scan-move {
+        0%, 100% { top: 0%; }
+        50% { top: 100%; }
+    }
+    
+    /* Hover effect for the Bento Grid cards */
+    .feature-card {
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(8px);
+        padding: 1.5rem;
+        border-radius: 1.5rem;
+    }
+
+    .feature-card:hover {
+        transform: scale(1.02);
+        background: white;
+        border-color: rgba(37, 99, 235, 0.2);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.03), 0 0 20px rgba(37, 99, 235, 0.05);
+    }
+</style>
+
+    <!-- SubCheff Brain Section - Granger editorial style -->
+    <section class="py-24 bg-white px-6 relative z-10">
+        <div class="max-w-6xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 reveal">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border border-slate-200/60 shadow-sm">
+                        <i data-lucide="brain" class="w-3 h-3"></i> SubCheff Brain
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold leading-tight">Sugestões que<br>fazem <span class="text-blue-600 italic">sentido.</span></h2>
+                </div>
+                <p class="text-slate-500 max-w-sm text-sm leading-relaxed md:text-right">Nossa IA analisa o que está vencendo e cruza com seus hábitos para sugerir o prato perfeito.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="md:col-span-2 grid md:grid-cols-2 gap-4">
+                    <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[200px]">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-100 text-blue-700 text-[11px] font-bold rounded-full uppercase mb-4 border border-blue-200"><i data-lucide="alert-triangle" class="w-3.5 h-3.5"></i> Prioridade</span>
+                            <h3 class="text-lg font-bold mb-2">Desperdício Zero</h3>
+                            <p class="text-slate-500 text-[13px] leading-relaxed">Prioriza ingredientes perto do vencimento para evitar perdas.</p>
+                        </div>
+                    </div>
+                    <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[200px]">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-emerald-100 text-emerald-700 text-[11px] font-bold rounded-full uppercase mb-4 border border-emerald-200"><i data-lucide="package" class="w-3.5 h-3.5"></i> Estoque</span>
+                            <h3 class="text-lg font-bold mb-2">Análise de Inventário</h3>
+                            <p class="text-slate-500 text-[13px] leading-relaxed">Cruza receitas com seu estoque real — avisa o que tem e o que falta.</p>
+                        </div>
+                    </div>
+                    <div class="granger-card bg-[#0f172a] rounded-[2rem] p-7 text-white flex flex-col justify-between group min-h-[200px]">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-white/10 text-blue-300 text-[11px] font-bold rounded-full uppercase mb-4 border border-white/10"><i data-lucide="sparkles" class="w-3.5 h-3.5"></i> IA Ativa</span>
+                            <h3 class="text-lg font-bold mb-2">O que sobrou<br>vira receita.</h3>
+                        </div>
+                    </div>
+                    <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[200px]">
+                        <div>
+                            <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-amber-100 text-amber-700 text-[11px] font-bold rounded-full uppercase mb-4 border border-amber-200"><i data-lucide="scale" class="w-3.5 h-3.5"></i> Smart</span>
+                            <h3 class="text-lg font-bold mb-2">Ajuste de Porções</h3>
+                            <p class="text-slate-500 text-[13px] leading-relaxed">Recalcula quantidades para evitar sobras desnecessárias.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="reveal flex justify-center items-center">
+                    <div class="iphone-frame-slim max-w-[260px] md:max-w-[280px] shadow-xl border-[4px] border-slate-100">
+                        <img src="./assets/pratododia.png" alt="Sugestão do Dia" class="w-full h-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Voice / Alexa Section - Granger editorial style -->
+    <section class="py-24 bg-[#0f172a] text-white overflow-hidden relative">
+        <!-- Mascot video - top right corner -->
+        <div class="absolute top-8 right-8 md:top-12 md:right-12 z-20">
+            <div class="w-20 h-20 md:w-24 md:h-24 overflow-hidden rounded-full border-2 border-white/20 shadow-2xl shadow-blue-500/20 scale-105">
+                <video class="w-full h-full object-cover object-center" muted playsinline autoplay loop>
+                    <source src="./assets/mascote-alexa.mp4" type="video/mp4">
+                </video>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 reveal">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 text-blue-300 text-[10px] font-bold uppercase tracking-[0.2em] mb-4">
+                        <i data-lucide="mic" class="w-3 h-3"></i> Comando de Voz
+                    </div>
+                    <h2 class="text-4xl md:text-5xl font-bold leading-tight">"Alexa, avisa que o<br><span class="text-blue-400 italic">leite acabou.</span>"</h2>
+                </div>
+                <p class="text-slate-400 max-w-sm text-sm leading-relaxed md:text-right">Gerencie sua despensa sem tocar no celular. Mãos na massa, voz no comando.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-4">
+                <div class="granger-card bg-white/5 backdrop-blur rounded-[2rem] p-7 flex flex-col justify-between group min-h-[240px] border border-white/10">
+                    <div>
+                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="mic" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Integração Nativa</h3>
+                        <p class="text-slate-400 text-[13px] leading-relaxed">Use Alexa ou Google Home para gerenciar seu estoque sem tocar no celular.</p>
+                    </div>
+                    <div class="flex items-end justify-between mt-4">
+                        <span class="px-2.5 py-1 bg-white/10 text-[9px] font-bold rounded-full text-blue-300 uppercase">Alexa</span>
+                    </div>
+                </div>
+
+                <div class="granger-card bg-white/5 backdrop-blur rounded-[2rem] p-7 flex flex-col justify-between group min-h-[240px] border border-white/10">
+                    <div>
+                        <div class="w-10 h-10 bg-blue-500 rounded-xl flex items-center justify-center mb-4">
+                            <i data-lucide="list-plus" class="w-5 h-5 text-white"></i>
+                        </div>
+                        <h3 class="text-lg font-bold mb-2">Lista por Voz</h3>
+                        <p class="text-slate-400 text-[13px] leading-relaxed">Dite itens faltantes enquanto cozinha — aparecem no app de quem estiver no mercado.</p>
+                    </div>
+                    <div class="flex items-end justify-between mt-4">
+                        <span class="px-2.5 py-1 bg-white/10 text-[9px] font-bold rounded-full text-blue-300 uppercase">Tempo Real</span>
+                    </div>
+                </div>
+
+                <div class="granger-card bg-blue-600 rounded-[2rem] p-7 flex flex-col justify-between group relative overflow-hidden min-h-[240px]">
+                    <div class="relative z-10">
+                        <img src="./assets/alexa4.png" alt="Alexa Devices" class="w-full h-28 object-cover rounded-xl mb-4 opacity-90">
+                        <h3 class="text-lg font-bold">Processamento Inteligente</h3>
+                        <p class="text-blue-100/70 text-[13px]">"Adicionando Leite Integral à lista de compras..."</p>
+                    </div>
+                    <div class="flex items-center gap-2 mt-4 relative z-10">
+                        <div class="flex gap-0.5 items-center h-4">
+                            <div class="wave-bar" style="animation-delay: 0.1s; height: 12px;"></div>
+                            <div class="wave-bar" style="animation-delay: 0.3s; height: 16px;"></div>
+                            <div class="wave-bar" style="animation-delay: 0.2s; height: 8px;"></div>
+                            <div class="wave-bar" style="animation-delay: 0.4s; height: 14px;"></div>
+                        </div>
+                        <span class="text-[10px] font-bold text-blue-100 uppercase ml-2">Processando</span>
+                    </div>
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-blue-500/50 rounded-full blur-3xl"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seu Bolso Section - Granger editorial style -->
+   <section class="py-32 bg-[#f5f0eb] px-6 relative z-10">
+    <div class="max-w-6xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12 reveal">
+            <div>
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white text-slate-500 text-[10px] font-bold uppercase tracking-[0.2em] mb-4 border border-slate-200/60 shadow-sm">
+                    <i data-lucide="wallet" class="w-3 h-3"></i> Economia Colaborativa
+                </div>
+                <h2 class="text-4xl md:text-5xl font-bold leading-tight">Rede de <span class="text-blue-600 italic">econômia.</span></h2>
+            </div>
+            <p class="text-slate-500 max-w-sm text-sm leading-relaxed md:text-right">"Em qual mercado o leite está mais barato?"</p>
+        </div>
+
+        <!-- Crowdsource explainer card -->
+        <div class="granger-card bg-[#0f172a] rounded-[2rem] p-8 md:p-10 mb-4 relative overflow-hidden">
+            <div class="flex flex-col md:flex-row gap-8 md:gap-12 items-center">
+                <!-- Network SVG illustration -->
+                <div class="relative w-full md:w-1/2 flex items-center justify-center py-6">
+                    <svg viewBox="0 0 400 300" class="w-full max-w-sm" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Connection lines -->
+                        <line x1="200" y1="150" x2="80" y2="60" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+                        <line x1="200" y1="150" x2="320" y2="70" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+                        <line x1="200" y1="150" x2="60" y2="200" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+                        <line x1="200" y1="150" x2="340" y2="210" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+                        <line x1="200" y1="150" x2="140" y2="260" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+                        <line x1="200" y1="150" x2="280" y2="260" stroke="rgba(59,130,246,0.2)" stroke-width="1.5"/>
+                        <line x1="80" y1="60" x2="60" y2="200" stroke="rgba(59,130,246,0.08)" stroke-width="1"/>
+                        <line x1="320" y1="70" x2="340" y2="210" stroke="rgba(59,130,246,0.08)" stroke-width="1"/>
+                        <line x1="60" y1="200" x2="140" y2="260" stroke="rgba(59,130,246,0.08)" stroke-width="1"/>
+                        <line x1="340" y1="210" x2="280" y2="260" stroke="rgba(59,130,246,0.08)" stroke-width="1"/>
+                        <line x1="80" y1="60" x2="320" y2="70" stroke="rgba(59,130,246,0.06)" stroke-width="1"/>
+                        <line x1="140" y1="260" x2="280" y2="260" stroke="rgba(59,130,246,0.06)" stroke-width="1"/>
+
+                        <!-- Animated pulse lines -->
+                        <line x1="200" y1="150" x2="80" y2="60" stroke="rgba(59,130,246,0.5)" stroke-width="2" stroke-dasharray="4 8" class="animate-pulse"/>
+                        <line x1="200" y1="150" x2="340" y2="210" stroke="rgba(59,130,246,0.5)" stroke-width="2" stroke-dasharray="4 8" class="animate-pulse" style="animation-delay:0.5s"/>
+                        <line x1="200" y1="150" x2="140" y2="260" stroke="rgba(59,130,246,0.5)" stroke-width="2" stroke-dasharray="4 8" class="animate-pulse" style="animation-delay:1s"/>
+
+                        <!-- Outer user nodes -->
+                        <circle cx="80" cy="60" r="18" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1.5"/>
+                        <text x="80" y="64" text-anchor="middle" fill="white" font-size="14">👤</text>
+                        <circle cx="320" cy="70" r="18" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1.5"/>
+                        <text x="320" y="74" text-anchor="middle" fill="white" font-size="14">👤</text>
+                        <circle cx="60" cy="200" r="18" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1.5"/>
+                        <text x="60" y="204" text-anchor="middle" fill="white" font-size="14">👤</text>
+                        <circle cx="340" cy="210" r="18" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1.5"/>
+                        <text x="340" y="214" text-anchor="middle" fill="white" font-size="14">👤</text>
+                        <circle cx="140" cy="260" r="18" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1.5"/>
+                        <text x="140" y="264" text-anchor="middle" fill="white" font-size="14">👤</text>
+                        <circle cx="280" cy="260" r="18" fill="rgba(59,130,246,0.15)" stroke="rgba(59,130,246,0.3)" stroke-width="1.5"/>
+                        <text x="280" y="264" text-anchor="middle" fill="white" font-size="14">👤</text>
+
+                        <!-- Small data labels near nodes -->
+                        <rect x="100" y="44" rx="6" ry="6" width="52" height="16" fill="rgba(16,185,129,0.2)"/>
+                        <text x="126" y="55" text-anchor="middle" fill="#6ee7b7" font-size="8" font-weight="bold">R$ 4,29</text>
+                        <rect x="248" y="56" rx="6" ry="6" width="52" height="16" fill="rgba(16,185,129,0.2)"/>
+                        <text x="274" y="67" text-anchor="middle" fill="#6ee7b7" font-size="8" font-weight="bold">R$ 5,10</text>
+                        <rect x="350" y="194" rx="6" ry="6" width="48" height="16" fill="rgba(16,185,129,0.2)"/>
+                        <text x="374" y="205" text-anchor="middle" fill="#6ee7b7" font-size="8" font-weight="bold">R$ 3,99</text>
+
+                        <!-- Center hub - SubCheff logo -->
+                        <circle cx="200" cy="150" r="32" fill="rgba(59,130,246,0.25)" stroke="rgba(59,130,246,0.5)" stroke-width="2"/>
+                        <circle cx="200" cy="150" r="24" fill="#2563eb"/>
+                        <text x="200" y="155" text-anchor="middle" fill="white" font-size="11" font-weight="bold">POA</text>
+
+                        <!-- Glow effect on center -->
+                        <circle cx="200" cy="150" r="45" fill="none" stroke="rgba(59,130,246,0.15)" stroke-width="1" class="animate-ping" style="animation-duration:3s"/>
+                    </svg>
+                </div>
+
+                <!-- Explanation text -->
+                <div class="flex-1 text-white">
+                    <h3 class="text-2xl md:text-3xl font-bold mb-4 leading-tight">Dados de preços alimentados<br>pela <span class="text-blue-400">comunidade</span></h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Cada nota fiscal escaneada vira um dado anônimo de preço. Com milhares de usuários compartilhando, construímos o maior mapa de preços de supermercado do Brasil — atualizado em tempo real.
+                    </p>
+                    <div class="flex flex-col gap-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="scan-line" class="w-4 h-4 text-blue-400"></i>
+                            </div>
+                            <p class="text-slate-300 text-[13px]"><span class="text-white font-semibold">Você escaneia</span> sua nota fiscal</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="database" class="w-4 h-4 text-blue-400"></i>
+                            </div>
+                            <p class="text-slate-300 text-[13px]"><span class="text-white font-semibold">Os preços entram</span> na rede anonimamente</p>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0">
+                                <i data-lucide="sparkles" class="w-4 h-4 text-emerald-400"></i>
+                            </div>
+                            <p class="text-slate-300 text-[13px]"><span class="text-white font-semibold">Todos se beneficiam</span> com preços reais e atualizados</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="absolute -right-20 -top-20 w-60 h-60 bg-blue-500/10 rounded-full blur-3xl"></div>
+            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-blue-500/10 rounded-full blur-3xl"></div>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-4">
+
+            <!-- Price comparison card -->
+            <div class="md:col-span-2 granger-card bg-white rounded-[2rem] p-8 md:p-10 flex flex-col justify-between group min-h-[380px]">
+                <div class="flex justify-between items-start mb-8">
+                    <div>
+                        <span class="text-[10px] font-bold text-blue-600 uppercase tracking-widest mb-1 block">Análise de Economia</span>
+                        <h4 class="text-4xl font-bold text-slate-900">R$ 1.240,00</h4>
+                        <p class="text-xs text-slate-400 mt-1">Total investido este mês</p>
+                    </div>
+                    <div class="flex items-center gap-1 text-green-500 font-bold text-sm bg-green-50 px-3 py-1.5 rounded-full">
+                        <i data-lucide="trending-down" class="w-4 h-4"></i> 12.4%
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <p class="text-xs font-bold text-slate-700 uppercase tracking-tight">Onde comprar hoje:</p>
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center text-blue-600 font-bold text-xs">A</div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900">Pão de Açúcar</p>
+                                <p class="text-[10px] text-slate-500">A 1.2km</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm font-bold text-blue-600">R$ 412,50</p>
+                            <p class="text-[9px] text-green-600 font-bold">MELHOR PREÇO</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between p-4 bg-white rounded-2xl border border-slate-100 opacity-50">
+                        <div class="flex items-center gap-3">
+                            <div class="w-8 h-8 bg-slate-100 rounded-lg flex items-center justify-center text-slate-600 font-bold text-xs">C</div>
+                            <div>
+                                <p class="text-sm font-bold text-slate-900">Carrefour Express</p>
+                                <p class="text-[10px] text-slate-500">A 0.8km</p>
+                            </div>
+                        </div>
+                        <p class="text-sm font-bold text-slate-500">R$ 448,90</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between mt-6">
+                    <div class="flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
+                        <p class="text-[10px] text-slate-400">Dados de 2.4k usuários na sua região</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features list -->
+            <div class="flex flex-col gap-4">
+                <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[120px]">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shrink-0">
+                            <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold mb-1">Comparativo Geográfico</h3>
+                            <p class="text-slate-500 text-[13px] leading-relaxed">Preços reais reportados por usuários nos mercados ao seu redor.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="granger-card bg-white rounded-[2rem] p-7 flex flex-col justify-between group min-h-[120px]">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600 shrink-0">
+                            <i data-lucide="line-chart" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold mb-1">Histórico de Inflação</h3>
+                            <p class="text-slate-500 text-[13px] leading-relaxed">Acompanhe a evolução dos preços com dados reais da comunidade.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="granger-card bg-[#0f172a] rounded-[2rem] p-7 text-white flex flex-col justify-between group min-h-[120px]">
+                    <div class="flex items-start gap-4">
+                        <div class="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center text-white shrink-0">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-base font-bold mb-1">Avisos de Oferta</h3>
+                            <p class="text-slate-400 text-[13px] leading-relaxed">Quando alguém encontra um preço baixo perto de você, te avisamos.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    <!-- Waitlist Section - Unified -->
+    <section id="waitlist" class="py-24 bg-white px-6 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            <div class="bg-slate-50/50 border border-slate-100 rounded-[3rem] p-10 md:p-14 relative overflow-hidden text-center">
+
+                <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-100 shadow-sm text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-8">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+                    </span>
+                    Lista de espera ao vivo
+                </div>
+
+                <h3 class="text-3xl md:text-5xl font-bold text-slate-900 mb-6 leading-tight">
+                    Junte-se aos primeiros <br> <span class="text-blue-600 italic">Chefs.</span>
+                </h3>
+
+                <p class="text-slate-500 max-w-md mx-auto mb-12 text-sm md:text-base leading-relaxed">
+                    Nossa comunidade está crescendo de forma orgânica com pessoas que buscam uma cozinha mais inteligente.
+                </p>
+
+                <div class="relative inline-block mb-12">
+                    <div class="absolute inset-0 bg-blue-400/10 blur-3xl rounded-full scale-150"></div>
+                    <div class="relative flex items-center justify-center gap-4">
+                        <span class="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter">1.248</span>
+                        <div class="text-left">
+                            <p class="text-blue-600 font-bold text-xl leading-none">Inscritos</p>
+                            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-1">na versão beta</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Early Adopter Bonus -->
+                <div class="max-w-md mx-auto relative group mb-10">
+                    <div class="bg-white border border-slate-200/60 rounded-3xl p-5 shadow-sm transition-all duration-300 group-hover:border-blue-200 group-hover:shadow-md">
+                        <div class="flex items-center gap-5">
+                            <div class="w-12 h-12 bg-blue-50 rounded-2xl flex items-center justify-center flex-shrink-0">
+                                <i data-lucide="gift" class="w-6 h-6 text-blue-600"></i>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-[10px] font-bold uppercase tracking-widest text-blue-600 mb-0.5">Early Adopter Bonus</p>
+                                <p class="text-sm text-slate-600 leading-snug">
+                                    Ganhe <span class="text-slate-900 font-bold">2 meses de Premium</span> por apoiar o projeto desde o início.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="absolute -top-2 -right-2 bg-blue-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter shadow-lg shadow-blue-200">
+                        Free
+                    </div>
+                </div>
+
+                <!-- Email form -->
+                <form id="waitlistForm" onsubmit="handleSubmit(event)" class="max-w-md mx-auto flex flex-col md:flex-row gap-3">
+                    <input type="email" id="emailInput" placeholder="Seu melhor e-mail" required
+                        class="flex-1 px-6 py-4 rounded-2xl border border-slate-200 outline-none focus:ring-4 focus:ring-blue-100 transition">
+                    <button type="submit" id="submitBtn"
+                            class="bg-blue-600 text-white px-8 py-4 rounded-2xl font-bold hover:bg-blue-700 transition shadow-lg shadow-blue-200 flex items-center justify-center gap-2">
+                        Avisar-me
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-16 bg-slate-50 border-t border-slate-200 px-6 text-center relative z-10">
+        <div class="flex justify-center flex-wrap gap-4 mb-8">
+    <a href="https://instagram.com/seuusuario" target="_blank" class="group relative">
+        <div class="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:border-pink-200 group-hover:bg-pink-50 shadow-sm">
+            <i data-lucide="instagram" class="w-5 h-5 text-slate-500 group-hover:text-pink-600 transition-colors"></i>
+        </div>
+    </a>
+    
+    <a href="https://tiktok.com/@seuusuario" target="_blank" class="group relative">
+        <div class="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:border-slate-900 group-hover:bg-slate-900 shadow-sm">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-slate-500 group-hover:text-white transition-colors">
+                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+            </svg>
+        </div>
+    </a>
+
+    <a href="https://youtube.com/seucanal" target="_blank" class="group relative">
+        <div class="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:border-red-200 group-hover:bg-red-50 shadow-sm">
+            <i data-lucide="youtube" class="w-5 h-5 text-slate-500 group-hover:text-red-600 transition-colors"></i>
+        </div>
+    </a>
+
+    <a href="mailto:contato@subcheff.com.br?subject=Contato%20via%20Site" class="group relative" title="Fale Conosco">
+        <div class="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center transition-all duration-300 group-hover:border-blue-200 group-hover:bg-blue-50 shadow-sm">
+            <i data-lucide="mail" class="w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-colors"></i>
+        </div>
+    </a>
+</div>
+        <div class="flex flex-col items-center gap-4">
+    <p class="text-[10px] text-slate-400 uppercase tracking-[0.2em]">
+        © 2026 SubCheff App — Tecnologia Brasileira.
+    </p>
+       <div class="flex items-center gap-2 text-slate-400">
+        <img src="./assets/subcheff_logo_preto.svg" alt="SubCheff" class="h-5 opacity-40 grayscale">
+        <span class="text-sm font-bold tracking-tight">SubCheff</span>
+    </div>
+</div>
+    </footer>
+
+    <div id="successModal" class="fixed inset-0 z-[110] hidden items-center justify-center p-4">
+        <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="closeSuccessModal()"></div>
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full relative z-10 text-center shadow-2xl">
+            <div class="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="check-circle" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-2xl font-bold mb-3 text-slate-900">Inscrição Confirmada!</h3>
+            <p class="text-slate-500 mb-8 leading-relaxed">
+                Você acabou de garantir sua vaga no Beta e seus 2 meses de Premium. Fique de olho no seu e-mail!
+            </p>
+            <button onclick="closeSuccessModal()" class="w-full py-4 bg-slate-900 text-white rounded-2xl font-bold hover:bg-black transition">
+                Excelente!
+            </button>
+        </div>
+    </div>
+
+    <div id="downloadModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/80 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full relative z-10 text-center shadow-2xl border border-white/20">
+        
+        <div class="w-16 h-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <i data-lucide="hammer" class="w-8 h-8 animate-hammer"></i>
+        </div>
+        
+        <h3 class="text-2xl font-bold mb-3 text-slate-900">Versão Beta em breve!</h3>
+        <p class="text-slate-500 mb-8 leading-relaxed">
+            O SubCheff está em fase final de desenvolvimento. Inscreva-se na nossa lista para receber o convite da versão Beta assim que for liberada.
+        </p>
+        
+        <a href="#waitlist" onclick="closeModal()" class="block w-full py-4 bg-blue-600 text-white rounded-2xl font-bold hover:bg-blue-700 transition-all hover:scale-[1.02] shadow-lg shadow-blue-200">
+            Garantir minha vaga
+        </a>
+    </div>
+</div>
+
+
+
+    <script>
+        lucide.createIcons();
+        function openModal() { document.getElementById('downloadModal').classList.add('active'); }
+        function closeModal() { document.getElementById('downloadModal').classList.remove('active'); }
+
+        const iconContainer = document.getElementById('icon-bg');
+        const icons = ['utensils', 'chef-hat', 'sparkles', 'brain', 'shopping-cart', 'apple', 'refrigerator'];
+        for (let i = 0; i < 25; i++) {
+            const div = document.createElement('div');
+            div.className = 'floating-icon';
+            div.style.left = Math.random() * 100 + '%';
+            div.style.top = Math.random() * 100 + '%';
+            div.style.animationDelay = (Math.random() * 8) + 's';
+            div.innerHTML = `<i data-lucide="${icons[Math.floor(Math.random() * icons.length)]}"></i>`;
+            iconContainer.appendChild(div);
+        }
+        lucide.createIcons();
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.reveal, .mock-expand').forEach(el => observer.observe(el));
+
+        // Mascot video seamless loop - RAF for precise timing
+        const mascotVideo = document.getElementById('mascot-video');
+        function checkLoop() {
+            if (mascotVideo.duration && mascotVideo.currentTime > mascotVideo.duration - 0.8) {
+                mascotVideo.currentTime = 0.10;
+            }
+            requestAnimationFrame(checkLoop);
+        }
+        requestAnimationFrame(checkLoop);
+
+        // Show floating mascot after scrolling past hero
+        const mascot = document.getElementById('floating-mascot');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 600) {
+                mascot.style.opacity = '1';
+                mascot.style.transform = 'translateX(0)';
+            } else {
+                mascot.style.opacity = '0';
+                mascot.style.transform = 'translateX(-100px)';
+            }
+        });
+
+        // Mascot click → show speech bubble
+        const mascotCircle = document.getElementById('mascot-circle');
+        const mascotBubble = document.getElementById('mascot-bubble');
+        let bubbleOpen = false;
+
+        mascotCircle.addEventListener('click', () => {
+            bubbleOpen = !bubbleOpen;
+            if (bubbleOpen) {
+                mascotBubble.style.opacity = '1';
+                mascotBubble.style.transform = 'translateY(0)';
+                mascotBubble.style.pointerEvents = 'auto';
+            } else {
+                mascotBubble.style.opacity = '0';
+                mascotBubble.style.transform = 'translateY(8px)';
+                mascotBubble.style.pointerEvents = 'none';
+            }
+        });
+
+        // Close bubble when clicking outside
+        document.addEventListener('click', (e) => {
+            if (bubbleOpen && !mascot.contains(e.target)) {
+                bubbleOpen = false;
+                mascotBubble.style.opacity = '0';
+                mascotBubble.style.transform = 'translateY(8px)';
+                mascotBubble.style.pointerEvents = 'none';
+            }
+        });
+
+
+  async function handleSubmit(event) {
+    event.preventDefault();
+    
+    const emailInput = document.getElementById('emailInput');
+    const btn = document.getElementById('submitBtn');
+    const successModal = document.getElementById('successModal');
+    
+    // Configurações do seu Google Form
+    const formURL = 'https://docs.google.com/forms/d/e/1FAIpQLSeHuYbR-sAHosB4zAtzK95XdGtTStqJr6jc09BXOnFF3klPqA/formResponse';
+    const emailEntryID = 'entry.437051905';
+    const deviceEntryID = 'entry.1802300905';
+
+    // Detecção automática de dispositivo
+    let deviceDetected = "Desktop / Outro";
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+    if (/android/i.test(userAgent)) {
+        deviceDetected = "Android";
+    } else if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+        deviceDetected = "iOS (iPhone/iPad)";
+    }
+
+    // Feedback visual de carregamento
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = `<span class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>`;
+
+    // Preparação dos dados
+    const formData = new FormData();
+    formData.append(emailEntryID, emailInput.value);
+    formData.append(deviceEntryID, deviceDetected);
+
+    try {
+        await fetch(formURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            body: formData
+        });
+
+        // Sucesso
+        successModal.classList.remove('hidden');
+        successModal.classList.add('flex');
+        emailInput.value = '';
+
+    } catch (error) {
+        console.error('Erro ao enviar:', error);
+        alert('Ops! Tivemos um problema. Tente novamente em instantes.');
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+function closeSuccessModal() {
+    const modal = document.getElementById('successModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+    
+    </script>
+</body>
+</html>
